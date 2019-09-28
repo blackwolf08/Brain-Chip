@@ -8,7 +8,7 @@ class Circle {
   }
 }
 class TeamClassifier {
-  high = 400;
+  high = 300;
   low = 0;
 
   randomPoints = range(0, 100).map(_ => {
@@ -62,7 +62,7 @@ class TeamClassifier {
 
   trainSlow = update => {
     this.randomPoints.map(async point => {
-      await this.sleep(800);
+      await this.sleep(500);
       const guessResult = this.guess(point);
       const error = this.actual_team(point) - guessResult;
 
@@ -95,8 +95,12 @@ class TeamClassifier {
 
 export default class TeamClassifierView extends Component {
   tc = new TeamClassifier();
-  X_MAX = 400;
-  Y_MAX = 400;
+  X_MAX = 300;
+  Y_MAX = 300;
+
+  state = {
+    change: null
+  };
 
   handleTrain = event => {
     this.tc.train();
@@ -104,7 +108,14 @@ export default class TeamClassifierView extends Component {
   };
   handleTrainSlow = event => {
     const update = () => {
-      this.forceUpdate();
+      this.setState({
+        change: 'change'
+      });
+      setInterval(() => {
+        this.setState({
+          change: null
+        });
+      }, 490);
     };
     this.tc.trainSlow(update);
   };
@@ -127,22 +138,22 @@ export default class TeamClassifierView extends Component {
               fill={this.tc.guess(point) === 1 ? 'red' : 'blue'}
             />
           ))}
-          <line x1='0' x2='400' y1='0' y2='400' stroke='#999' />
+          <line x1='0' x2='300' y1='0' y2='300' stroke='#999' />
         </svg>
         <p>NOTE: Train till weights become almost like X == Y</p>
         <button className='tc-button' onClick={this.handleTrain}>
           Train
         </button>
         <button className='tc-button' onClick={this.handleNewPoints}>
-          Random points with trained weights
+          Random points with current weights
         </button>
         <button className='tc-button' onClick={this.handleTrainSlow}>
           See visual training of weights
         </button>
         <div>
           <h4>Weights</h4>
-          <p>X : {this.tc.weights.x}</p>
-          <p>Y : {this.tc.weights.y}</p>
+          <p className={this.state.change}>X : {this.tc.weights.x}</p>
+          <p className={this.state.change}>Y : {this.tc.weights.y}</p>
           <p>Last Error : {this.tc.error}</p>
         </div>
       </div>

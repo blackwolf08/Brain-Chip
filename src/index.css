@@ -26,9 +26,27 @@ code {
   height: 50px;
   border: none;
   outline: none;
+  margin-bottom: 20px;
 }
 
 .tc-svg {
   border: 1px solid #f9f9f9;
   background-color: #f9f9f9;
+}
+
+.change {
+  background-color: #fff;
+  animation: change 0.5s linear;
+}
+
+@keyframes change {
+  0% {
+    background-color: #fff;
+  }
+  50% {
+    background-color: lightcoral;
+  }
+  100% {
+    background-color: #fff;
+  }
 }
